@@ -1,0 +1,19 @@
+{
+    "peers": [
+        {
+            "peerNo": 1,
+            "peerIp": "192.168.1.3",
+            "peerPort": 3000
+        },
+        {
+            "peerNo": 2,
+            "peerIp": "192.168.1.3",
+            "peerPort": 3001
+        },
+        {
+            "peerNo": 3,
+            "peerIp": "192.168.1.3",
+            "peerPort": 3002
+        }
+    ]
+}
