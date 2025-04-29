@@ -85,11 +85,14 @@ import jsonFileInterface from "../JsonFileInterface.js";
 
 class Database {
     constructor() {
-        const nodeUrls = [];
+        // const nodeUrls = [];
+        console.log(jsonFileInterface.read("./peers-config.json").peers)
+        console.log(jsonFileInterface.read("./identity.json").port)
         this.gun = Gun({
-            peers: nodeUrls,
+            peers: jsonFileInterface.read("./peers-config.json").peers,
             file: "persistent-store",
             radisk: true,
+            listen:jsonFileInterface.read("./identity.json").port
         });
     }
 

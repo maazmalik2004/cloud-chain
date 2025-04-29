@@ -18,7 +18,7 @@ class Blockchain {
     async initializeBlockchain() {
         const blockchain = await this.database.get("blockchain");
         const mempool = await this.database.get("mempool");
-        const pot = await this.database.get("pot")
+        // const pot = await this.database.get("pot")
 
         if (!blockchain || blockchain.length === 0) {
             await this.createGenesisBlock();
@@ -28,9 +28,9 @@ class Blockchain {
             await this.createMempool();
         }
 
-        if(!pot){
-            await this.createPot();
-        }
+        // if(!pot){
+        //     await this.createPot();
+        // }
 
         this.validator = new Worker('./blockchain/validator.js');
         this.appender = new Worker("./blockchain/appender.js")
@@ -68,10 +68,10 @@ class Blockchain {
         await this.database.set('mempool', mempool);
     }
 
-    async createPot(){
-        const pot = [];
-        await this.database.set("pot",pot)
-    }
+    // async createPot(){
+    //     const pot = [];
+    //     await this.database.set("pot",pot)
+    // }
 
     async addData(transactions){
         transactions = transactions.map(t => ({
@@ -145,9 +145,9 @@ class Blockchain {
 
         await this.addSpecial([investmentTransaction])
 
-        const pot = await this.database.get("pot");
-        pot.push(investment)
-        await this.database.set("pot",pot)
+        // const pot = await this.database.get("pot");
+        // pot.push(investment)
+        // await this.database.set("pot",pot)
     }
 
     // calculateMerkleRoot(data) {
@@ -253,6 +253,14 @@ const d = 5000
 // await bc.addData(["block4data1", "block4data2", "block4data3"]);
 
 // await bc.invest(10)
+
+// await bc.addData(["block5data1", "block5data2", "block5data3"]);
+
+// await bc.addData(["block6data1", "block6data2", "block6data3"]);
+
+// await bc.addData([{
+//     value:"this is an data of object form and this is so cool"
+// }]);
 
 setTimeout(async () => {
   console.log(JSON.stringify(await database.get("blockchain"),null,4));
