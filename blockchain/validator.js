@@ -17,7 +17,14 @@ async function validate() {
         if (nextBlockToBeValidated !== -1) {
             console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] validating block ${nextBlockToBeValidated} ${JSON.stringify(mempool[nextBlockToBeValidated])}`);
             // Simulate block validation (skipping the actual validation for now)
+
+            //before validation
+            updateRegistry(mempool[nextBlockToBeValidated]["data"])
+
             mempool[nextBlockToBeValidated]["validated"] = true;
+
+            //after validation
+            await conductReward(mempool[nextBlockToBeValidated]["source"])
             await database.set("mempool", mempool);
         } else {
             console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] mempool empty. no blocks left to validate`);
@@ -33,6 +40,70 @@ async function getNextBlockToBeValidated() {
         }
     }
     return -1;
+}
+
+async function updateRegistry(transactions) {
+    const registry = await database.get("registry")
+
+    transactions.map(t => {
+        if(t.type == "stake"){
+            const source = t.source
+            const amount = t.amount
+            //we subtract stake amount from capacity wallet of source
+            registry[source]["capacityWallet"] -= amount
+            registry[source]["stake"] += amount
+        }
+
+        if(t.type == "investment"){
+            const source = t.source
+            const amount = t.amount
+            //we subtract stake amount from capacity wallet of source
+            registry[source]["capacityWallet"] -= amount
+            registry[source]["investment"] += amount
+        }
+    })
+
+    await database.set("registry",registry)
+    // console.log(await database.get("registry"))
+}
+
+async function conductReward(source) {
+    const registry = await database.get("registry");
+
+    let netInvestment = 0;
+    let netStake = 0;
+
+    // Calculate total investment and stake
+    Object.keys(registry).forEach(key => {
+        netInvestment += registry[key].investment;
+        netStake += registry[key].stake;
+    });
+
+    // Avoid division by zero
+    if (netStake === 0) {
+        console.warn("No stake in the registry. Aborting reward distribution.");
+        return;
+    }
+
+    const myStake = registry[source].stake;
+    const myFractionStake = myStake / netStake;
+
+    const reward = (netInvestment / 2) * myFractionStake;
+
+    // Reduce others' investment proportionally
+    Object.keys(registry).forEach(key => {
+        const user = registry[key];
+        user.investment -= (user.investment / 2) * myFractionStake;
+    });
+
+    // Add reward to source's capacityWallet
+    registry[source].capacityWallet += reward;
+
+    //make the stake 0 
+    registry[source].stake = 0
+
+    // Optionally save updated registry
+    await database.set("registry", registry);
 }
 
 validate();

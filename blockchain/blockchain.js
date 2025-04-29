@@ -19,6 +19,8 @@ class Blockchain {
         const blockchain = await this.database.get("blockchain");
         const mempool = await this.database.get("mempool");
         // const pot = await this.database.get("pot")
+        const registry = await this.database.get("registry")
+        console.log(registry)
 
         if (!blockchain || blockchain.length === 0) {
             await this.createGenesisBlock();
@@ -26,6 +28,10 @@ class Blockchain {
 
         if (!mempool || !Array.isArray(mempool)) {
             await this.createMempool();
+        }
+
+        if(!registry){
+            await this.createRegistry();
         }
 
         // if(!pot){
@@ -66,6 +72,29 @@ class Blockchain {
     async createMempool() {
         const mempool = [];
         await this.database.set('mempool', mempool);
+    }
+
+    async createRegistry(){
+        const registry = {
+            // network : {
+            //     investment:0
+            // },
+            maaz:{
+                capacityWallet:100,
+                unit:"mu",
+                stake:0,
+                investment:0,
+            },
+            malik:{
+                capacityWallet:100,
+                unit:"mu",
+                stake:0,
+                investment:0
+            }
+        }
+        await this.database.set("registry",registry)
+        console.log("billa meow meow")
+        console.log(await this.database.get("registry"))
     }
 
     // async createPot(){
@@ -262,12 +291,15 @@ const d = 5000
 //     value:"this is an data of object form and this is so cool"
 // }]);
 
+// await bc.addData(["block7data1", "block7data2", "block7data3"]);
+
+
 setTimeout(async () => {
-  console.log(JSON.stringify(await database.get("blockchain"),null,4));
-  console.log(await database.get("pot"))
+//   console.log(JSON.stringify(await database.get("blockchain"),null,4));
+  console.log(JSON.stringify(await database.get("registry"),null,4));
 }, 5000);
 
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+// function delay(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+//   }
   

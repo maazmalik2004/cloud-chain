@@ -2,21 +2,24 @@ import database from "../database/database.js";
 import { parentPort } from 'worker_threads';
 import crypto from 'crypto';
 
-
 let blockchain = await database.get("blockchain");
 let mempool = await database.get("mempool");
 
 async function append() {
     setInterval(async () => {
         blockchain = await database.get("blockchain");
+
         const nextBlockToBeAppended = await getNextBlockToBeAppended();
         if (nextBlockToBeAppended !== -1) {
             const blockToAppend = mempool[nextBlockToBeAppended];
+            
             const merkleRoot = calculateMerkleRoot(blockToAppend["data"])
             blockToAppend["merkleRoot"] = merkleRoot
+
             const previousBlock = blockchain[blockchain.length-1]
             const previousBlockHash = calculateHash(JSON.stringify(previousBlock))
             blockToAppend["previousHash"] = previousBlockHash
+
             mempool.splice(nextBlockToBeAppended, 1);
             blockchain.push(blockToAppend);
             await database.set("mempool", mempool);

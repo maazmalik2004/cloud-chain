@@ -93,11 +93,16 @@ console.log(`Connecting to peers: ${PEERS.join(', ')}`);
 
 // Get reference to the blockchain node
 const blockchain = gun.get('blockchain');
+const registry = gun.get('registry')
 
 // Listen for updates to the blockchain
 blockchain.on((data) => {
   console.log('Blockchain update received:', JSON.stringify(JSON.parse(data.data),null,4));
 });
+
+registry.on((data) => {
+    console.log('Registry update received:', JSON.stringify(JSON.parse(data.data),null,4));
+  });
 
 // // Initialize blockchain if needed
 // blockchain.once(data => {
