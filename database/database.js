@@ -81,6 +81,7 @@
 // // console.log(await db.get("key2"))
 
 import Gun from "gun";
+import jsonFileInterface from "../JsonFileInterface.js";
 
 class Database {
     constructor() {

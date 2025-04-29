@@ -2,7 +2,6 @@ import database from "../database/database.js";
 import crypto from 'crypto';
 import { Worker } from 'worker_threads';
 import jsonFileInterface from "../JsonFileInterface.js";
-import { json } from "stream/consumers";
 
 class Blockchain {
     constructor() {
@@ -39,7 +38,14 @@ class Blockchain {
 
     async createGenesisBlock() {
         const genesisData = [
-            "if it ain't broke, don't fix it"
+            {
+                type: "data",
+                data: "if it ain't broke, don't fix it",
+                source: this.identity,
+                target: "network",
+                amount: 0,
+                unit: "mu"
+            }
         ];
         const merkleRoot = this.calculateMerkleRoot(genesisData);
 
@@ -67,23 +73,50 @@ class Blockchain {
         await this.database.set("pot",pot)
     }
 
+    async addData(transactions){
+        transactions = transactions.map(t => ({
+            type: "data",
+            data: t,
+            source: this.identity,
+            target: "network",
+            amount: 0,
+            unit: "mu"
+        }));
+
+        transactions.push({
+            type: "stake",
+            data: "this is stake for adding a block",
+            source: this.identity,
+            target: "network",
+            amount: 1,
+            unit: "mu"
+        })
+
+        await this.addBlock(transactions)
+    }
+
+    async addSpecial(transaction){
+        await this.addBlock(transaction)
+    }
+
     async addBlock(transactions) {
+
         const blockchain = await this.database.get("blockchain")
         if (!blockchain || blockchain.length === 0) {
             throw new Error("Blockchain not initialized.");
         }
     
-        const lastBlock = blockchain[blockchain.length - 1];
-        const previousHash = this.calculateHash(JSON.stringify(lastBlock));
-        const merkleRoot = this.calculateMerkleRoot(transactions);
+        // const lastBlock = blockchain[blockchain.length - 1];
+        // const previousHash = this.calculateHash(JSON.stringify(lastBlock));
+        // const merkleRoot = this.calculateMerkleRoot(transactions);
     
         const block = {
             timestamp: new Date().toISOString(),
-            previousHash: previousHash,
-            merkleRoot: merkleRoot,
+            // previousHash: previousHash,
+            // merkleRoot: merkleRoot,
             data: transactions,
-            stakeAmount:1,
-            unit:"mu",
+            // stakeAmount:1,
+            // unit:"mu",
             validated: false,
             source: this.identity
         };
@@ -101,30 +134,60 @@ class Blockchain {
             source:this.identity,
         }
 
+        const investmentTransaction = {
+            type:"investment",
+            data:"this is an investment transaction",
+            source:this.identity,
+            target:"network",
+            amount:memoryUnits,
+            unit:"mu"
+        }
+
+        await this.addSpecial([investmentTransaction])
+
         const pot = await this.database.get("pot");
         pot.push(investment)
         await this.database.set("pot",pot)
     }
 
-    calculateMerkleRoot(data) {
-        let entries = [...data];
+    // calculateMerkleRoot(data) {
+    //     let entries = [...data];
 
+    //     if (entries.length === 1) {
+    //         return this.calculateHash(entries[0]);
+    //     }
+
+    //     let nextLevel = [];
+
+    //     for (let i = 0; i < entries.length; i += 2) {
+    //         if (i + 1 < entries.length) {
+    //             nextLevel.push(this.calculateHash(entries[i] + entries[i + 1]));
+    //         } else {
+    //             nextLevel.push(this.calculateHash(entries[i] + entries[i]));
+    //         }
+    //     }
+
+    //     return this.calculateMerkleRoot(nextLevel);
+    // }
+
+    calculateMerkleRoot(data) {
+        let entries = data.map(entry => JSON.stringify(entry)); // Ensure all entries are strings
+    
         if (entries.length === 1) {
             return this.calculateHash(entries[0]);
         }
-
+    
         let nextLevel = [];
-
+    
         for (let i = 0; i < entries.length; i += 2) {
-            if (i + 1 < entries.length) {
-                nextLevel.push(this.calculateHash(entries[i] + entries[i + 1]));
-            } else {
-                nextLevel.push(this.calculateHash(entries[i] + entries[i]));
-            }
+            const left = entries[i];
+            const right = i + 1 < entries.length ? entries[i + 1] : entries[i];
+            nextLevel.push(this.calculateHash(left + right));
         }
-
+    
         return this.calculateMerkleRoot(nextLevel);
     }
+    
 
     calculateHash(data) {
         return crypto.createHash('sha256').update(data).digest('hex');
@@ -178,21 +241,21 @@ const bc = new Blockchain();
 await bc.initializeBlockchain();
 const d = 5000
 
-await bc.addBlock(["block1data1", "block1data2", "block1data3"])
-// await delay(d); // wait 3 seconds
+// await bc.addData(["block1data1", "block1data2", "block1data3"])
+// // // await delay(d); // wait 3 seconds
+// // 
+// await bc.addData(["block2data1", "block2data2", "block2data3"]);
+// // // await delay(d);
 
-// await bc.addBlock(["block2data1", "block2data2", "block2data3"]);
-// await delay(d);
+// await bc.addData(["block3data1", "block3data2", "block3data3"]);
+// // // await delay(d);
 
-// await bc.addBlock(["block3data1", "block3data2", "block3data3"]);
-// await delay(d);
-
-// await bc.addBlock(["block4data1", "block4data2", "block4data3"]);
+// await bc.addData(["block4data1", "block4data2", "block4data3"]);
 
 // await bc.invest(10)
 
 setTimeout(async () => {
-  console.log(await database.get("blockchain"));
+  console.log(JSON.stringify(await database.get("blockchain"),null,4));
   console.log(await database.get("pot"))
 }, 5000);
 
