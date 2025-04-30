@@ -272,7 +272,7 @@ const d = 5000
 
 // await bc.addData(["block1data1", "block1data2", "block1data3"])
 // // // await delay(d); // wait 3 seconds
-// // 
+
 // await bc.addData(["block2data1", "block2data2", "block2data3"]);
 // // // await delay(d);
 
@@ -281,6 +281,7 @@ const d = 5000
 
 // await bc.addData(["block4data1", "block4data2", "block4data3"]);
 
+// 
 // await bc.invest(10)
 
 // await bc.addData(["block5data1", "block5data2", "block5data3"]);
@@ -288,14 +289,14 @@ const d = 5000
 // await bc.addData(["block6data1", "block6data2", "block6data3"]);
 
 // await bc.addData([{
-//     value:"this is an data of object form and this is so cool"
+//     value:"this is an data of object form from maaz and this is so cool"
 // }]);
 
 // await bc.addData(["block7data1", "block7data2", "block7data3"]);
 
 
 setTimeout(async () => {
-//   console.log(JSON.stringify(await database.get("blockchain"),null,4));
+  console.log(JSON.stringify(await database.get("blockchain"),null,4));
   console.log(JSON.stringify(await database.get("registry"),null,4));
 }, 5000);
 

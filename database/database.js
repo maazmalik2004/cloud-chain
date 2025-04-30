@@ -82,14 +82,13 @@
 
 import Gun from "gun";
 import jsonFileInterface from "../JsonFileInterface.js";
-
 class Database {
     constructor() {
-        // const nodeUrls = [];
         console.log(jsonFileInterface.read("./peers-config.json").peers)
         console.log(jsonFileInterface.read("./identity.json").port)
         this.gun = Gun({
             peers: jsonFileInterface.read("./peers-config.json").peers,
+            // peers:['http://localhost:4001/gun'],
             file: "persistent-store",
             radisk: true,
             listen:jsonFileInterface.read("./identity.json").port
@@ -137,21 +136,3 @@ class Database {
 
 const db = new Database();
 export default db;
-
-// await db.set("key1",{})
-// await db.set("key2",[])
-// await db.set("key3",null)
-// await db.set("key4",69)
-// await db.set("key5","hello world")
-
-// const key1 = await db.get("key1");
-// const key2 = await db.get("key2");
-// const key3 = await db.get("key3");
-// const key4 = await db.get("key4");
-// const key5 = await db.get("key5");
-
-// console.log("key1:", key1);
-// console.log("key2:", key2);
-// console.log("key3:", key3);
-// console.log("key4:", key4);
-// console.log("key5:", key5);

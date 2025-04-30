@@ -78,10 +78,10 @@
 import Gun from 'gun';
 
 // Hardcode the peers
-const PEERS = ['http://localhost:3000/gun','http://localhost:3001/gun'];
+const PEERS = ['http://localhost:3000/gun','http://localhost:3001/gun', 'http://localhost:3002/gun'];
 
 // Start Gun on the current port
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 const gun = Gun({ 
   file: `peer_data_${PORT}`, 
   peers: PEERS, 

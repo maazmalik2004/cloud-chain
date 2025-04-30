@@ -98,6 +98,7 @@ async function conductReward(source) {
 
     // Add reward to source's capacityWallet
     registry[source].capacityWallet += reward;
+    registry[source].capacityWallet += registry[source].stake
 
     //make the stake 0 
     registry[source].stake = 0

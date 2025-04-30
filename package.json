@@ -13,6 +13,7 @@
   "dependencies": {
     "@helia/unixfs": "^5.0.0",
     "@orbitdb/core": "^2.5.0",
+    "cors": "^2.8.5",
     "dockerode": "^4.0.6",
     "express": "^5.1.0",
     "gun": "^0.2020.1240",
