@@ -6,11 +6,8 @@ import jsonFileInterface from "../JsonFileInterface.js";
 class Blockchain {
     constructor() {
         this.database = database;
-        // this.initializeBlockchain();
         this.validator;
         this.appender;
-        // this.setupValidator();
-        // this.setupAppender();
         this.identity = jsonFileInterface.read("./identity.json").identifier
         console.log(this.identity)
     }
@@ -33,10 +30,6 @@ class Blockchain {
         if(!registry){
             await this.createRegistry();
         }
-
-        // if(!pot){
-        //     await this.createPot();
-        // }
 
         this.validator = new Worker('./blockchain/validator.js');
         this.appender = new Worker("./blockchain/appender.js")
@@ -96,11 +89,6 @@ class Blockchain {
         console.log("billa meow meow")
         console.log(await this.database.get("registry"))
     }
-
-    // async createPot(){
-    //     const pot = [];
-    //     await this.database.set("pot",pot)
-    // }
 
     async addData(transactions){
         transactions = transactions.map(t => ({
@@ -173,31 +161,7 @@ class Blockchain {
         }
 
         await this.addSpecial([investmentTransaction])
-
-        // const pot = await this.database.get("pot");
-        // pot.push(investment)
-        // await this.database.set("pot",pot)
     }
-
-    // calculateMerkleRoot(data) {
-    //     let entries = [...data];
-
-    //     if (entries.length === 1) {
-    //         return this.calculateHash(entries[0]);
-    //     }
-
-    //     let nextLevel = [];
-
-    //     for (let i = 0; i < entries.length; i += 2) {
-    //         if (i + 1 < entries.length) {
-    //             nextLevel.push(this.calculateHash(entries[i] + entries[i + 1]));
-    //         } else {
-    //             nextLevel.push(this.calculateHash(entries[i] + entries[i]));
-    //         }
-    //     }
-
-    //     return this.calculateMerkleRoot(nextLevel);
-    // }
 
     calculateMerkleRoot(data) {
         let entries = data.map(entry => JSON.stringify(entry)); // Ensure all entries are strings
@@ -217,54 +181,10 @@ class Blockchain {
         return this.calculateMerkleRoot(nextLevel);
     }
     
-
     calculateHash(data) {
         return crypto.createHash('sha256').update(data).digest('hex');
     }
-    
-    // Setup worker communication
-    // setupValidator() {
-    //     this.validator.on('message', (msg) => {
-    //         console.log('Received from worker:', msg);
-    //     });
-
-    //     this.validator.on('error', (err) => {
-    //         console.error('Worker error:', err);
-    //     });
-
-    //     this.validator.on('exit', (code) => {
-    //         if (code !== 0) {
-    //             console.error(`Worker stopped with exit code ${code}`);
-    //         }
-    //     });
-    // }
-
-    // setupAppender() {
-    //     this.appender.on('message', (msg) => {
-    //         console.log('Received from worker:', msg);
-    //     });
-
-    //     this.appender.on('error', (err) => {
-    //         console.error('Worker error:', err);
-    //     });
-
-    //     this.appender.on('exit', (code) => {
-    //         if (code !== 0) {
-    //             console.error(`Worker stopped with exit code ${code}`);
-    //         }
-    //     });
-    // }
 }
-
-// async function startBlockchain() {
-//     const bc = new Blockchain();
-
-//     // Now log the blockchain after initialization
-//     // const blockchain = await database.get("blockchain");
-//     // console.log(blockchain);
-// }
-
-// startBlockchain();
 
 const bc = new Blockchain();
 await bc.initializeBlockchain();
@@ -276,12 +196,10 @@ const d = 5000
 // await bc.addData(["block2data1", "block2data2", "block2data3"]);
 // // // await delay(d);
 
+// //from maaz
 // await bc.addData(["block3data1", "block3data2", "block3data3"]);
-// // // await delay(d);
-
 // await bc.addData(["block4data1", "block4data2", "block4data3"]);
 
-// 
 // await bc.invest(10)
 
 // await bc.addData(["block5data1", "block5data2", "block5data3"]);
