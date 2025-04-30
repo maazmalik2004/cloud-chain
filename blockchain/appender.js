@@ -24,9 +24,9 @@ async function append() {
             blockchain.push(blockToAppend);
             await database.set("mempool", mempool);
             await database.set("blockchain", blockchain);
-            console.log(`[APPENDER][APPEND][${new Date().toISOString()}] appended block ${nextBlockToBeAppended}`);
+            // console.log(`[APPENDER][APPEND][${new Date().toISOString()}] appended block ${nextBlockToBeAppended}`);
         } else {
-            console.log(`[APPENDER][APPEND][${new Date().toISOString()}] no blocks left to append`);
+            // console.log(`[APPENDER][APPEND][${new Date().toISOString()}] no blocks left to append`);
         }
     }, 1000);
 }

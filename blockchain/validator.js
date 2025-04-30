@@ -15,7 +15,7 @@ async function validate() {
         const nextBlockToBeValidated = await getNextBlockToBeValidated();
 
         if (nextBlockToBeValidated !== -1) {
-            console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] validating block ${nextBlockToBeValidated} ${JSON.stringify(mempool[nextBlockToBeValidated])}`);
+            // console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] validating block ${nextBlockToBeValidated} ${JSON.stringify(mempool[nextBlockToBeValidated])}`);
             // Simulate block validation (skipping the actual validation for now)
 
             //before validation
@@ -27,7 +27,7 @@ async function validate() {
             await conductReward(mempool[nextBlockToBeValidated]["source"])
             await database.set("mempool", mempool);
         } else {
-            console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] mempool empty. no blocks left to validate`);
+            // console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] mempool empty. no blocks left to validate`);
         }
     }, 1000);
 }

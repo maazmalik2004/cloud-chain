@@ -186,15 +186,13 @@ class Blockchain {
     }
 }
 
-const bc = new Blockchain();
-await bc.initializeBlockchain();
-const d = 5000
+const blockchain = new Blockchain();
+await blockchain.initializeBlockchain();
+export default blockchain
 
 // await bc.addData(["block1data1", "block1data2", "block1data3"])
-// // // await delay(d); // wait 3 seconds
 
 // await bc.addData(["block2data1", "block2data2", "block2data3"]);
-// // // await delay(d);
 
 // //from maaz
 // await bc.addData(["block3data1", "block3data2", "block3data3"]);
@@ -212,13 +210,7 @@ const d = 5000
 
 // await bc.addData(["block7data1", "block7data2", "block7data3"]);
 
-
-setTimeout(async () => {
-  console.log(JSON.stringify(await database.get("blockchain"),null,4));
-  console.log(JSON.stringify(await database.get("registry"),null,4));
-}, 5000);
-
-// function delay(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-//   }
-  
+// setTimeout(async () => {
+//   console.log(JSON.stringify(await database.get("blockchain"),null,4));
+//   console.log(JSON.stringify(await database.get("registry"),null,4));
+// }, 5000);

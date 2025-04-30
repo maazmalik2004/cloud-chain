@@ -120,8 +120,8 @@ async function getAvailablePort(startPort = 2222, maxTries = 10) {
   throw new Error("No available ports found.");
 }
 
-async function createUbuntuSSHContainer(memoryLimitMb = 512) {
-  const containerName = `ubuntu_ssh_${crypto.randomBytes(4).toString('hex')}`;
+async function createUbuntuSSHContainer(memoryLimitMb = 512, identifier) {
+  const containerName = `ubuntu_ssh_${identifier}`;
   let sshPort = 2222; // Starting port
   const sshUser = "user";
   const sshPass = "password";
@@ -206,7 +206,7 @@ async function createUbuntuSSHContainer(memoryLimitMb = 512) {
 }
 
 // Run the function
-createUbuntuSSHContainer()
+export default createUbuntuSSHContainer
 
 // .then(result => {
 //     console.log("\n🔗 SSH Access URL:");

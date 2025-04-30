@@ -1,4 +1,5 @@
 {
-    "identifier": "maaz",
-    "port":3000
+    "identifier": "malik",
+    "port": 3000,
+    "password": "password"
 }
