@@ -205,8 +205,23 @@ async function createUbuntuSSHContainer(memoryLimitMb = 512, identifier) {
   return output
 }
 
+async function deleteUbuntuSSHContainer(identifier) {
+  const containerName = `ubuntu_ssh_${identifier}`;
+  try {
+    const container = docker.getContainer(containerName);
+    await container.stop();
+    await container.remove();
+    console.log(`🗑️ Container '${containerName}' deleted successfully.`);
+  } catch (err) {
+    console.error(`❌ Failed to delete container '${containerName}':`, err.message);
+  }
+}
+
+
 // Run the function
-export default createUbuntuSSHContainer
+// export default createUbuntuSSHContainer
+export { createUbuntuSSHContainer, deleteUbuntuSSHContainer };
+
 
 // .then(result => {
 //     console.log("\n🔗 SSH Access URL:");

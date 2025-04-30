@@ -24,8 +24,8 @@ async function validate() {
             mempool[nextBlockToBeValidated]["validated"] = true;
 
             //after validation
-            await conductReward(mempool[nextBlockToBeValidated]["source"])
             await database.set("mempool", mempool);
+            await conductReward(mempool[nextBlockToBeValidated]["source"])
         } else {
             // console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] mempool empty. no blocks left to validate`);
         }
@@ -68,6 +68,7 @@ async function updateRegistry(transactions) {
 }
 
 async function conductReward(source) {
+    console.log("conducting reward")
     const registry = await database.get("registry");
 
     let netInvestment = 0;
@@ -79,6 +80,8 @@ async function conductReward(source) {
         netStake += registry[key].stake;
     });
 
+    console.log(netStake)
+
     // Avoid division by zero
     if (netStake === 0) {
         console.warn("No stake in the registry. Aborting reward distribution.");
@@ -88,7 +91,11 @@ async function conductReward(source) {
     const myStake = registry[source].stake;
     const myFractionStake = myStake / netStake;
 
+    console.log(myFractionStake)
+
     const reward = (netInvestment / 2) * myFractionStake;
+
+    console.log(reward)
 
     // Reduce others' investment proportionally
     Object.keys(registry).forEach(key => {

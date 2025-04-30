@@ -82,7 +82,7 @@ if(!loggedIn){
 
 import bc from "./blockchain/blockchain.js"
 import db from "./database/database.js"
-import createUbuntuSSHContainer from "./containerManager.js"
+import { createUbuntuSSHContainer, deleteUbuntuSSHContainer } from "./containerManager.js"
 
 function warningBox(message){
     console.log(boxen(message,{
@@ -145,39 +145,33 @@ while(exit == false){
             level++;
             if(commandArray[level] == "BLOCKCHAIN"){
                 console.log(JSON.stringify(await db.get("blockchain"),null,4))
-            }else if(commandArray[level] == "PROFILE"){
+            }else if(commandArray[level] == "PROFILES"){
                 console.log(await db.get("registry"))
             }else{
                 warningBox("Command Invalid")
             }
         
         }else if(commandArray[level] == "LAUNCH"){
-            let isLaunchActive = await jsonFileInterface.read("./isLaunchActive.json")
-            isLaunchActive = isLaunchActive.isLaunchActive
-            
-            if(!isLaunchActive){
-                const totalMemory = 1024
-                const registry = await db.get("registry")
+            const totalMemory = 1024
+            const registry = await db.get("registry")
 
-                const identifier = identity.identifier
-                const myOwnership = registry[identifier]["capacityWallet"]
+            const identifier = identity.identifier
+            const myOwnership = registry[identifier]["capacityWallet"]
 
-                let totalOwnership = 0
-                Object.keys(registry).map((key)=>{(
-                    totalOwnership += registry[key]["capacityWallet"]
-                )})
+            let totalOwnership = 0
+            Object.keys(registry).map((key)=>{(
+                totalOwnership += registry[key]["capacityWallet"]
+            )})
 
-                const fractionOwnership = myOwnership/totalOwnership
-                const computationPower = Math.round(fractionOwnership*totalMemory)
-                console.log(computationPower)
+            const fractionOwnership = myOwnership/totalOwnership
+            const computationPower = Math.round(fractionOwnership*totalMemory)
+            console.log(computationPower)
 
-                await createUbuntuSSHContainer(computationPower, identity.identifier).then((data)=>{
-                    console.log(data)
-                })
-                await jsonFileInterface.write("./isLaunchActive",{
-                    isLaunchActive:true
-                })
-            }
+            await createUbuntuSSHContainer(computationPower, identity.identifier).then((data)=>{
+                // console.log(data)
+            })
+        }else if(commandArray[level] == "TERMINATE"){
+            await deleteUbuntuSSHContainer(identity.identifier)
         }
         else{
             warningBox("Command Invalid")

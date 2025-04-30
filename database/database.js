@@ -2,8 +2,8 @@ import Gun from "gun";
 import jsonFileInterface from "../JsonFileInterface.js";
 class Database {
     constructor() {
-        console.log(jsonFileInterface.read("./peers-config.json").peers)
-        console.log(jsonFileInterface.read("./identity.json").port)
+        // console.log(jsonFileInterface.read("./peers-config.json").peers)
+        // console.log(jsonFileInterface.read("./identity.json").port)
         this.gun = Gun({
             peers: jsonFileInterface.read("./peers-config.json").peers,
             // peers:['http://localhost:4001/gun'],
