@@ -16,7 +16,7 @@ class Blockchain {
         const blockchain = await this.database.get("blockchain");
         const mempool = await this.database.get("mempool");
         // const pot = await this.database.get("pot")
-        const registry = await this.database.get("registry")
+        let registry = await this.database.get("registry")
         console.log(registry)
 
         if (!blockchain || blockchain.length === 0) {
@@ -31,6 +31,8 @@ class Blockchain {
             await this.createRegistry();
         }
 
+        registry = await this.database.get("registry")
+        console.log("ooga booga",registry)
         if(!registry[this.identity]){
             registry[this.identity] = {
                 capacityWallet:100,
@@ -81,7 +83,7 @@ class Blockchain {
     async createRegistry(){
         const registry = {}
         await this.database.set("registry",registry)
-        console.log(await this.database.get("registry"))
+        console.log("created registry", await this.database.get("registry"))
     }
 
     async addData(transactions){
