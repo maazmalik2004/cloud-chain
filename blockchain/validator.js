@@ -25,7 +25,9 @@ async function validate() {
 
             //after validation
             await database.set("mempool", mempool);
-            await conductReward(mempool[nextBlockToBeValidated]["source"])
+            if(mempool[nextBlockToBeValidated]["validated"] == true){
+                await conductReward(mempool[nextBlockToBeValidated]["source"])
+            }
         } else {
             // console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] mempool empty. no blocks left to validate`);
         }
