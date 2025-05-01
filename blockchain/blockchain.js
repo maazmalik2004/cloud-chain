@@ -31,6 +31,17 @@ class Blockchain {
             await this.createRegistry();
         }
 
+        if(!registry[this.identity]){
+            registry[this.identity] = {
+                capacityWallet:100,
+                unit:"mu",
+                stake:0,
+                investment:0,
+            }
+            await this.database.set("registry",registry)
+            console.log(registry)
+        }
+
         this.validator = new Worker('./blockchain/validator.js');
         this.appender = new Worker("./blockchain/appender.js")
     }
@@ -68,25 +79,8 @@ class Blockchain {
     }
 
     async createRegistry(){
-        const registry = {
-            // network : {
-            //     investment:0
-            // },
-            maaz:{
-                capacityWallet:100,
-                unit:"mu",
-                stake:0,
-                investment:0,
-            },
-            malik:{
-                capacityWallet:100,
-                unit:"mu",
-                stake:0,
-                investment:0
-            }
-        }
+        const registry = {}
         await this.database.set("registry",registry)
-        console.log("billa meow meow")
         console.log(await this.database.get("registry"))
     }
 
