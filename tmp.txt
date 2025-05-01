@@ -1,1 +1,6 @@
-"https://gun-manhattan.herokuapp.com/gun"
+* https://gun-manhattan.herokuapp.com/gun
+* https://peer.wallie.io/gun
+* https://gundb-relay-mlccl.ondigitalocean.app/gun
+* https://plankton-app-6qfp3.ondigitalocean.app/
+* https://gun.defucc.me/gun
+* https://talkflow.team/gun
