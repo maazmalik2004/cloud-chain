@@ -1,5 +1,6 @@
 import database from "../database/database.js";
 import { parentPort } from 'worker_threads';
+import fs from "fs"
 
 // await database.set("mempool",[
 //     { source: "5678", validated: false, data: "Block 1 data" },
@@ -9,12 +10,21 @@ import { parentPort } from 'worker_threads';
 // ])
 
 let mempool = await database.get("mempool");
+let identity = JSON.parse(fs.readFileSync("./identity.json","utf8"))
+console.log("identity in validator",identity)
 
 async function validate() {
     setInterval(async () => {
         const nextBlockToBeValidated = await getNextBlockToBeValidated();
 
-        if (nextBlockToBeValidated !== -1) {
+        if (nextBlockToBeValidated !== -1 && mempool[nextBlockToBeValidated]["source"] != identity.identifier) {
+            console.log(mempool[nextBlockToBeValidated])
+            console.log(mempool[nextBlockToBeValidated].source)
+            console.log(mempool[nextBlockToBeValidated]["source"])
+            console.log(identity)
+            console.log(typeof identity)
+            console.log(identity.identifier)
+            console.log(identity["identifier"])
             // console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] validating block ${nextBlockToBeValidated} ${JSON.stringify(mempool[nextBlockToBeValidated])}`);
             // Simulate block validation (skipping the actual validation for now)
 
@@ -24,10 +34,12 @@ async function validate() {
             mempool[nextBlockToBeValidated]["validated"] = true;
 
             //after validation
-            await database.set("mempool", mempool);
             if(mempool[nextBlockToBeValidated]["validated"] == true){
                 await conductReward(mempool[nextBlockToBeValidated]["source"])
+            }else{
+                await conductPunishment(mempool[nextBlockToBeValidated]["source"]);
             }
+            await database.set("mempool", mempool);
         } else {
             // console.log(`[VALIDATOR][VALIDATE][${new Date().toISOString()}] mempool empty. no blocks left to validate`);
         }
@@ -115,5 +127,23 @@ async function conductReward(source) {
     // Optionally save updated registry
     await database.set("registry", registry);
 }
+
+async function conductPunishment(source) {
+    console.log("conducting punishment");
+    const registry = await database.get("registry");
+
+    const user = registry[source];
+    if (!user) {
+        console.warn(`User ${source} not found in registry`);
+        return;
+    }
+
+    // Move stake to investment instead of returning it
+    user.investment += user.stake;
+    user.stake = 0;
+
+    await database.set("registry", registry);
+}
+
 
 validate();

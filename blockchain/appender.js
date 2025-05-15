@@ -8,10 +8,13 @@ let mempool = await database.get("mempool");
 async function append() {
     setInterval(async () => {
         blockchain = await database.get("blockchain");
+        // console.log(blockchain)
 
         const nextBlockToBeAppended = await getNextBlockToBeAppended();
         if (nextBlockToBeAppended !== -1) {
+            // console.log(blockchain)
             const blockToAppend = mempool[nextBlockToBeAppended];
+            console.log(blockToAppend)
             
             const merkleRoot = calculateMerkleRoot(blockToAppend["data"])
             blockToAppend["merkleRoot"] = merkleRoot
@@ -33,6 +36,9 @@ async function append() {
 
 async function getNextBlockToBeAppended() {
     mempool = await database.get("mempool");
+    if(!mempool){
+        mempool = []
+    }
     for (let key = 0; key < mempool.length; key++) {
         if (mempool[key]["validated"] === true) {
             return key;

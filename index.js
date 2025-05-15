@@ -8,6 +8,7 @@ import { Command } from 'commander';
 const program = new Command();
 
 import shellQuote from "shell-quote"
+import crypto from "crypto"
 
 console.log(`\x1b[34m
     ____ _                 _  ____ _           _       
@@ -48,7 +49,7 @@ if(!identity.password){
         prefix:"🔐"
     })
 
-    identity["password"] = response.password
+    identity["password"] = crypto.createHash('sha256').update(response.password).digest('hex');
     jsonFileInterface.write("./identity.json",identity)
     loggedIn = true
 }
@@ -64,7 +65,7 @@ if(!loggedIn){
     const expectedPassword = identity.password
     const enteredPassword = response.password
 
-    if(expectedPassword != enteredPassword){
+    if(expectedPassword != crypto.createHash('sha256').update(enteredPassword).digest('hex')){
         console.log(boxen("Password is incorrect, Exiting",{
             padding:1,
             borderStyle:"round",
