@@ -78,3 +78,5 @@ node index.js
 # peer1@CloudChain :  » TERMINATE
 ```
 ### Stops the provisioned container
+![image](https://github.com/user-attachments/assets/9ee35a5b-0819-417c-94c3-f930e8609d68)
+
