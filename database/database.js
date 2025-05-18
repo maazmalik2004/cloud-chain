@@ -130,7 +130,7 @@ class Database {
     }
 
     set(key, value) {
-        setKeyValue(key, value);
+        // setKeyValue(key, value);
         return new Promise((resolve) => {
             this.gun.get(key).put({ data: JSON.stringify(value) }).once((data) => {
                 // console.log(`[DATABASE][SET][${new Date().toISOString()}] key ${key} data ${JSON.stringify(data, null, 4)}`);
