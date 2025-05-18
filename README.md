@@ -64,3 +64,17 @@ node index.js
 
 ### Registry state after reward distribution
 ![image](https://github.com/user-attachments/assets/b19770f3-8a51-4622-bf3f-ee9b6b748367)
+
+```command
+# peer1@CloudChain :  » LAUNCH
+```
+### Provisions an ubuntu container with the memory you own
+![image](https://github.com/user-attachments/assets/96c16b9d-166d-4532-94b7-b288d99473bb)
+
+### Access container via ssh
+![image](https://github.com/user-attachments/assets/6d0a14dc-097d-4bb9-89aa-a4afb45e19ef)
+
+```command
+# peer1@CloudChain :  » TERMINATE
+```
+### Stops the provisioned container
