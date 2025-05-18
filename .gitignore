@@ -136,7 +136,7 @@ dist
 .pnp.*
 
 # all persistent-store lock files
-persistent-store*
+persistent-store*/
 
 # gun js synchronization server files
 gunjs-server-data*/
